@@ -1,0 +1,35 @@
+name: Deploy odoc to GitHub Pages
+
+on:
+  - push
+
+permissions: read-all
+
+concurrency:
+  group: deploy-odoc
+  cancel-in-progress: true
+
+jobs:
+  deploy-doc:
+    name: Deploy odoc to GitHub Pages
+
+    permissions:
+      contents: read
+      id-token: write
+      pages: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout tree
+        uses: actions/checkout@v4
+
+      - name: Set-up OCaml 5.1
+        uses: ocaml/setup-ocaml@v2
+        with:
+          ocaml-compiler: "5.1"
+          allow-prerelease-opam: true
+          dune-cache: true
+
+      - name: Deploy odoc to GitHub Pages
+        uses: ocaml/setup-ocaml/deploy-doc@native-github-pages
